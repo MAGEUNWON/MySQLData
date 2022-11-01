@@ -61,12 +61,12 @@ async function getData(){
       let codes = data[key].Codes.Code[0].CodeNo;
       let plots = data[key].plots.plot[0].plotText;
       let actors = data[key].actors.actor[0].actorNm
-      let posters = data[key].posters
-      const arr = posters.split('|', 1);
+      let poster = data[key].posters
+      let posters = poster.split('|', 1);
 
-      movieDataList.push([title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors, arr])
+      movieDataList.push([title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors, posters])
 
-      // console.log(movieDataList);
+      console.log(movieDataList);
     }
 
     // const sql = 'insert into movieapi (title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors) values?';
@@ -88,7 +88,7 @@ async function getData(){
 
           const random = a[Math.floor(Math.random() * a.length)];
           console.log(random);
-
+          
 
         }
       });
