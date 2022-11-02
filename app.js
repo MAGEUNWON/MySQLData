@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 async function getData(){
   const response = await fetch("https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=7204O8KH4D5547Q3JBB7&detail=Y&genre=느와르&releaseDts=20200101&listCount=50");
   
-  //SF 코메디 공포 로맨스, 액션, 어드벤처, 드라마, 범죄
+  //SF 코메디 공포 로맨스, 액션, 어드벤처, 드라마, 범죄, 느와르
   return response;
 }
 
@@ -62,17 +62,23 @@ async function getData(){
       let plots = data[key].plots.plot[0].plotText;
       let actors = data[key].actors.actor[0].actorNm
       let poster = data[key].posters
-      let posters = poster.split('|', 1);
+      let array = poster.split('|', 1);
+      let posters = array.toString();
+      // console.log(posters);
+      
+
 
       movieDataList.push([title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors, posters])
 
       console.log(movieDataList);
     }
 
-    // const sql = 'insert into movieapi (title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors) values?';
-    //   const param = [movieDataList];
+    // const sql = 'insert into movie_api (title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors, posters) values?';
+    
+    // const param = [movieDataList];
 
-    const sql = 'SELECT title, repRlsDate, nation, plots FROM movieapi WHERE genre LIKE?'
+
+    const sql = 'SELECT title, repRlsDate, nation, plots, posters FROM movie_api WHERE genre LIKE?'
     const param = '%' + '어드벤처' + '%';
 
       db.query(sql, [param], function(err, rows, fields){
@@ -93,6 +99,16 @@ async function getData(){
         }
       });
 
+
+
+      // db.query(sql, param, function(err, rows, fields){
+      //   if(err){
+      //     console.log(err);
+      //   } else{
+      //     console.log(rows);
+      //   }
+      // });
+      
       
   
   })
