@@ -5,7 +5,7 @@ const mysql = require('mysql');
 //   host: 'localhost',
 //   port: '3306',
 //   user: 'root',
-//   password: 'root',
+//   password: 'abc',
 //   database: 'inthem'
 // }
 

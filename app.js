@@ -11,6 +11,8 @@ const mysqlConnection = require('./config/mysql');
 const axios = require('axios');
 const { response } = require('express');
 const fetch = require('node-fetch');
+const path = require('path');
+// const index = require('./public/index')
 
 mysqlConObj.open(db);
 
@@ -20,7 +22,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 
 async function getData(){
-  const response = await fetch("https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=7204O8KH4D5547Q3JBB7&detail=Y&genre=느와르&releaseDts=20200101&listCount=50");
+  const response = await fetch("https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=7204O8KH4D5547Q3JBB7&detail=Y&genre=SF&releaseDts=20200101&listCount=50");
   
   //SF 코메디 공포 로맨스, 액션, 어드벤처, 드라마, 범죄, 느와르
   return response;
@@ -70,46 +72,40 @@ async function getData(){
 
       movieDataList.push([title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors, posters])
 
-      console.log(movieDataList);
+      // console.log(movieDataList);
     }
 
-    // const sql = 'insert into movie_api (title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors, posters) values?';
+    // const sql = 'insert into movieapi (title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors, posters) values?';
     
     // const param = [movieDataList];
 
+    // db.query(sql, param, function(err, rows, fields){
+    //   if(err){
+    //     console.log(err);
+    //   } else{
+    //     console.log(rows);
+    //   }
+    // });
 
-    const sql = 'SELECT title, repRlsDate, nation, plots, posters FROM movie_api WHERE genre LIKE?'
-    const param = '%' + '어드벤처' + '%';
+    // const sql = 'SELECT title, repRlsDate, nation, actors, plots, posters FROM movie_api WHERE genre LIKE?'
+    // const param = '%' + '어드벤처' + '%';
 
-      db.query(sql, [param], function(err, rows, fields){
-        if(err){
-          console.log(err);
-        } else{
-          // const SFArr = [];
-          // for(i in rows)
-          // console.log(rows)
-          const a = rows;
-          // SFArr.push(rows[i].title + rows[i].repRlsDate + rows[i].nation);
-          // console.log(SFArr);
+    //   db.query(sql, [param], function(err, rows, fields){
+    //     if(err){
+    //       console.log(err);
+    //     } else{
+    //       // const SFArr = [];
+    //       // for(i in rows)
+    //       // console.log(rows)
+    //       const a = rows;
+    //       // SFArr.push(rows[i].title + rows[i].repRlsDate + rows[i].nation);
+    //       // console.log(SFArr);
 
-          const random = a[Math.floor(Math.random() * a.length)];
-          console.log(random);
+    //       const random = a[Math.floor(Math.random() * a.length)];
+    //       console.log(random);
           
-
-        }
-      });
-
-
-
-      // db.query(sql, param, function(err, rows, fields){
-      //   if(err){
-      //     console.log(err);
-      //   } else{
-      //     console.log(rows);
-      //   }
-      // });
-      
-      
+    //     }
+    //   });
   
   })
     .catch(err =>{
@@ -117,6 +113,39 @@ async function getData(){
   });
 
 
+app.use("/public", express.static(__dirname + "/public"))
+
+app.get("/", (req, res)=>{
+
+  const sql = 'SELECT title, repRlsDate, nation, actors, plots, posters FROM movie_api WHERE genre LIKE?'
+  const param = '%' + '어드벤처' + '%';
+
+  db.query(sql, [param], function(err, rows, fields){
+    let title = req.params.title;
+    let repRlsDate = req.params.repRlsDate;
+    let nation = req.params.nation;
+    let actors = req.params.actors;
+    let plot = req.params.plot;
+    let posters = req.params.posters;
+    // 얘네는 query
+
+    if(err){
+      console.log(err);
+    } else{
+      
+      const a = rows;
+      
+
+      const random = a[Math.floor(Math.random() * a.length)];
+      console.log(random);
+      // <span id = "test"> + title + </span> 이런식으로 연결하면 일단 string 형태임. 이걸 content type에서 html로 출력하라고 하면 html 형태로 나올 수 있음. ( res.writeHead(200, {"Content-Type" : "text/html"});)
+    }
+  });
+
+  res.sendFile(
+    path.join(__dirname, "/public/index.html")
+  );
+});
 
 // const getData= async()=>{
   
