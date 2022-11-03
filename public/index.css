@@ -12,7 +12,7 @@
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
-  background-color: #d9d9d9;
+  background-color: whitesmoke;
 }
 #app > div {
   width: 500px;
@@ -48,6 +48,11 @@
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  border:3px solid #6aafe6;
+  color: #1e6b7b;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  transition: 0.25s;
 }
 #app > div > div > div:nth-child(2) > div {
   width: 100%;
@@ -56,20 +61,33 @@
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
-  background-color: rgb(224, 184, 190);
+  /* background-color: rgb(224, 184, 190); */
 }
 #app > div > div > div:nth-child(2) > div > div > span {
   font-size: 1.5rem;
   text-align: center;
+  font-family: "paybooc-Light", sans-serif;
 }
 #app > span {
   font-size: 2rem;
   font-weight: bold;
+  font-family: "paybooc-Light", sans-serif;
 }
-#app > button {
+#app > form > button {
   width: 150px;
   height: 40px;
-  background-color: #f4f59d;
-  border: none;
+  background-color: #6e6e6e;
+  border: 3px solid #6aafe6;
   margin-left: 30rem;
-} /*# sourceMappingURL=randomMovie.css.map */
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: "paybooc-Light", sans-serif;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  background: linear-gradient(-45deg, #33ccff 0%, #ff99cc 100%);
+  color: white;
+  display: inline-block;
+  position: relative;
+} 

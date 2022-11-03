@@ -9,10 +9,12 @@ const bodyParser = require('body-parser');
 const { urlencoded } = require('body-parser');
 const mysqlConnection = require('./config/mysql');
 const axios = require('axios');
-const { response } = require('express');
+const { response, text } = require('express');
 const fetch = require('node-fetch');
 const path = require('path');
-// const index = require('./public/index')
+
+
+
 
 mysqlConObj.open(db);
 
@@ -113,22 +115,21 @@ async function getData(){
   });
 
 
+
 app.use("/public", express.static(__dirname + "/public"))
 
 app.get("/", (req, res)=>{
 
+  // res.writeHead(200, {"content-Type" : "text/html"});
+
+  
+  
+
   const sql = 'SELECT title, repRlsDate, nation, actors, plots, posters FROM movie_api WHERE genre LIKE?'
-  const param = '%' + '어드벤처' + '%';
+  const param = '%' + '로맨스' + '%';
 
   db.query(sql, [param], function(err, rows, fields){
-    let title = req.params.title;
-    let repRlsDate = req.params.repRlsDate;
-    let nation = req.params.nation;
-    let actors = req.params.actors;
-    let plot = req.params.plot;
-    let posters = req.params.posters;
-    // 얘네는 query
-
+  
     if(err){
       console.log(err);
     } else{
@@ -138,13 +139,94 @@ app.get("/", (req, res)=>{
 
       const random = a[Math.floor(Math.random() * a.length)];
       console.log(random);
-      // <span id = "test"> + title + </span> 이런식으로 연결하면 일단 string 형태임. 이걸 content type에서 html로 출력하라고 하면 html 형태로 나올 수 있음. ( res.writeHead(200, {"Content-Type" : "text/html"});)
-    }
-  });
+      
+      // let title = req.query.title;
+      // let repRlsDate = req.query.repRlsDate;
+      // let nation = req.params.nation;
+      // let actors = req.params.actors;
+      // let plot = req.params.plot;
+      // let posters = req.params.posters;
+      // 얘네는 query
 
-  res.sendFile(
-    path.join(__dirname, "/public/index.html")
-  );
+
+      console.log(random.title);
+      const date = random.repRlsDate; 
+      const nation = random.nation;
+      const plots = random.plots;
+      const title = random.title;
+      const posters = random.posters
+      const dateTem =` <span> 개봉 : ${date}  </span>`
+      const nationTem =` <span> 국가 : ${nation}  </span>`
+      const plotsTem =` <span> 줄거리 : ${plots}  </span>`
+      const titleTem =` <span>  ${title}  </span>`
+      const postersTem = `${posters}`
+      // <span id = "test"> + title + </span> 이런식으로 연결하면 일단 string 형태임. 이걸 content type에서 html로 출력하라고 하면 html 형태로 나올 수 있음. ( res.writeHead(200, {"Content-Type" : "text/html"})
+
+    
+
+      res.send(
+        `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Document</title>
+          <link rel="stylesheet" href="/public/index.css">
+          
+          <script type="module" src="/public/index.js" defer></script>
+        </head>
+        <body>
+
+          <div id = "app">
+
+            <div id = "drawer">
+
+              <div id = "card">
+
+                <div id = "front">
+                  <img src="${postersTem}" onerror= "this.src = 'public/pepe.jpg'" alt= "포스터가 없습니다" width='500px' height='600px' >
+                </div>
+
+                <div id = "back">
+                  <div>
+                    <div>
+                      ${dateTem}
+                    </div>
+                    <div>
+                      ${nationTem}
+                    </div>
+                    <div>
+                      ${plotsTem}
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+      
+            </div>
+
+            ${titleTem}
+
+            <form method = "GET">
+              <button id = "button" type = "submit" onclick = "getData()">다른 영화 추천 받기</button>
+            </form>
+            
+          </div>
+
+        
+        </body>
+        </html>
+        ` 
+      );
+
+    }
+
+    
+    });
+
 });
 
 // const getData= async()=>{

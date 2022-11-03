@@ -1,3 +1,17 @@
+
+// const tag = {
+//   app : document.getElementById("app"),
+//   drawer : app.children[0],
+//   span : app.children[1],
+//   button : app.children[2],
+//   card : drawer.children[0],
+//   front : card.children[0],
+//   back : card.children[1],
+// }
+
+// exports= tag;
+
+
 const app = document.getElementById("app");
 
 const drawer = app.children[0];
@@ -7,6 +21,33 @@ const button = app.children[2];
 const card = drawer.children[0];
 const front = card.children[0];
 const back = card.children[1];
+
+
+// const event = {
+//   isClick : true,
+
+//   drawer: addEventListener('click', ()=>{
+//     if(isClick===true){
+//       isClick = false;
+//       console.log(isClick);
+  
+//       card.style.transformStyle = "preserve-3d";
+//       card.style.transform = "rotateY(180deg)";
+//       card.style.transition = "1s";
+//     } else{
+//       isClick = true;
+//       console.log(isClick);
+  
+//       card.style.transformStyle = "preserve-3d";
+//       card.style.transform = "rotateY(0deg)";
+//       card.style.transition = "1s";
+//       front.style.backfaceVisibility = "visible";
+//     }
+//   })
+// }
+
+// exports.tag = tag;
+// exports.event = event;
 
 let isClick = true;
 
@@ -28,6 +69,7 @@ drawer.addEventListener('click', ()=>{
     front.style.backfaceVisibility = "visible";
   }
 })
+
 
 // button.addEventListener('click', ()=>{
 
