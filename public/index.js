@@ -1,4 +1,3 @@
-
 // const tag = {
 //   app : document.getElementById("app"),
 //   drawer : app.children[0],
@@ -11,7 +10,6 @@
 
 // exports= tag;
 
-
 const app = document.getElementById("app");
 
 const drawer = app.children[0];
@@ -22,7 +20,6 @@ const card = drawer.children[0];
 const front = card.children[0];
 const back = card.children[1];
 
-
 // const event = {
 //   isClick : true,
 
@@ -30,14 +27,14 @@ const back = card.children[1];
 //     if(isClick===true){
 //       isClick = false;
 //       console.log(isClick);
-  
+
 //       card.style.transformStyle = "preserve-3d";
 //       card.style.transform = "rotateY(180deg)";
 //       card.style.transition = "1s";
 //     } else{
 //       isClick = true;
 //       console.log(isClick);
-  
+
 //       card.style.transformStyle = "preserve-3d";
 //       card.style.transform = "rotateY(0deg)";
 //       card.style.transition = "1s";
@@ -51,15 +48,15 @@ const back = card.children[1];
 
 let isClick = true;
 
-drawer.addEventListener('click', ()=>{
-  if(isClick===true){
+drawer.addEventListener("click", () => {
+  if (isClick === true) {
     isClick = false;
     console.log(isClick);
 
     card.style.transformStyle = "preserve-3d";
     card.style.transform = "rotateY(180deg)";
     card.style.transition = "1s";
-  } else{
+  } else {
     isClick = true;
     console.log(isClick);
 
@@ -68,8 +65,7 @@ drawer.addEventListener('click', ()=>{
     card.style.transition = "1s";
     front.style.backfaceVisibility = "visible";
   }
-})
-
+});
 
 // button.addEventListener('click', ()=>{
 
@@ -89,7 +85,7 @@ drawer.addEventListener('click', ()=>{
 
 //           const random = a[Math.floor(Math.random() * a.length)];
 //           console.log(random);
-          
+
 //         }
 
 //       });

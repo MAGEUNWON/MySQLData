@@ -1,39 +1,36 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const dotenv = require('dotenv').config();
-const mysqlConObj = require('./config/mysql');
+const dotenv = require("dotenv").config();
+const mysqlConObj = require("./config/mysql");
 const db = mysqlConObj.init();
 const port = 3050;
-const request = require('request');
-const bodyParser = require('body-parser');
-const { urlencoded } = require('body-parser');
-const mysqlConnection = require('./config/mysql');
-const axios = require('axios');
-const { response, text } = require('express');
-const fetch = require('node-fetch');
-const path = require('path');
-
-
-
+const request = require("request");
+const bodyParser = require("body-parser");
+const { urlencoded } = require("body-parser");
+const mysqlConnection = require("./config/mysql");
+const axios = require("axios");
+const { response, text } = require("express");
+const fetch = require("node-fetch");
+const path = require("path");
 
 mysqlConObj.open(db);
 
-
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
+async function getData() {
+  const response = await fetch(
+    "https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=7204O8KH4D5547Q3JBB7&detail=Y&genre=SF&releaseDts=20200101&listCount=50"
+  );
 
-async function getData(){
-  const response = await fetch("https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=7204O8KH4D5547Q3JBB7&detail=Y&genre=SF&releaseDts=20200101&listCount=50");
-  
   //SF 코메디 공포 로맨스, 액션, 어드벤처, 드라마, 범죄, 느와르
   return response;
 }
 
-  getData()
-  .then(response => response.json())
-  .then(data => {
-    data = data.Data[0].Result
+getData()
+  .then((response) => response.json())
+  .then((data) => {
+    data = data.Data[0].Result;
     // console.log(data)
 
     // for (i = 0; i<6; i++){
@@ -45,7 +42,6 @@ async function getData(){
 
     // }
 
-
     // const dataArray = dataMovie.map(value =>{
     //   return value.actors.actor[0].actorNm
     // })
@@ -53,8 +49,7 @@ async function getData(){
 
     const movieDataList = [];
 
-    for(key in data){
-
+    for (key in data) {
       let title = data[key].title;
       let repRlsDate = data[key].repRlsDate;
       let nation = data[key].nation;
@@ -64,21 +59,31 @@ async function getData(){
       let directors = data[key].directors.director[0].directorNm;
       let codes = data[key].Codes.Code[0].CodeNo;
       let plots = data[key].plots.plot[0].plotText;
-      let actors = data[key].actors.actor[0].actorNm
-      let poster = data[key].posters
-      let array = poster.split('|', 1);
+      let actors = data[key].actors.actor[0].actorNm;
+      let poster = data[key].posters;
+      let array = poster.split("|", 1);
       let posters = array.toString();
       // console.log(posters);
-      
 
-
-      movieDataList.push([title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors, posters])
+      movieDataList.push([
+        title,
+        repRlsDate,
+        nation,
+        rating,
+        runtime,
+        genre,
+        directors,
+        codes,
+        plots,
+        actors,
+        posters,
+      ]);
 
       // console.log(movieDataList);
     }
 
     // const sql = 'insert into movieapi (title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors, posters) values?';
-    
+
     // const param = [movieDataList];
 
     // db.query(sql, param, function(err, rows, fields){
@@ -105,41 +110,32 @@ async function getData(){
 
     //       const random = a[Math.floor(Math.random() * a.length)];
     //       console.log(random);
-          
+
     //     }
     //   });
-  
   })
-    .catch(err =>{
-    console.log(err)
+  .catch((err) => {
+    console.log(err);
   });
 
+app.use("/public", express.static(__dirname + "/public"));
 
-
-app.use("/public", express.static(__dirname + "/public"))
-
-app.get("/", (req, res)=>{
-
+app.get("/", (req, res) => {
   // res.writeHead(200, {"content-Type" : "text/html"});
 
-  
-  
+  const sql =
+    "SELECT title, repRlsDate, nation, actors, plots, posters FROM movie_api WHERE genre LIKE?";
+  const param = "%" + "로맨스" + "%";
 
-  const sql = 'SELECT title, repRlsDate, nation, actors, plots, posters FROM movie_api WHERE genre LIKE?'
-  const param = '%' + '로맨스' + '%';
-
-  db.query(sql, [param], function(err, rows, fields){
-  
-    if(err){
+  db.query(sql, [param], function (err, rows, fields) {
+    if (err) {
       console.log(err);
-    } else{
-      
+    } else {
       const a = rows;
-      
 
       const random = a[Math.floor(Math.random() * a.length)];
       console.log(random);
-      
+
       // let title = req.query.title;
       // let repRlsDate = req.query.repRlsDate;
       // let nation = req.params.nation;
@@ -148,21 +144,18 @@ app.get("/", (req, res)=>{
       // let posters = req.params.posters;
       // 얘네는 query
 
-
       console.log(random.title);
-      const date = random.repRlsDate; 
+      const date = random.repRlsDate;
       const nation = random.nation;
       const plots = random.plots;
       const title = random.title;
-      const posters = random.posters
-      const dateTem =` <span> 개봉 : ${date}  </span>`
-      const nationTem =` <span> 국가 : ${nation}  </span>`
-      const plotsTem =` <span> 줄거리 : ${plots}  </span>`
-      const titleTem =` <span>  ${title}  </span>`
-      const postersTem = `${posters}`
+      const posters = random.posters;
+      const dateTem = ` <span> 개봉 : ${date}  </span>`;
+      const nationTem = ` <span> 국가 : ${nation}  </span>`;
+      const plotsTem = ` <span> 줄거리 : ${plots}  </span>`;
+      const titleTem = ` <span>  ${title}  </span>`;
+      const postersTem = `${posters}`;
       // <span id = "test"> + title + </span> 이런식으로 연결하면 일단 string 형태임. 이걸 content type에서 html로 출력하라고 하면 html 형태로 나올 수 있음. ( res.writeHead(200, {"Content-Type" : "text/html"})
-
-    
 
       res.send(
         `
@@ -219,20 +212,14 @@ app.get("/", (req, res)=>{
         
         </body>
         </html>
-        ` 
+        `
       );
-
     }
-
-    
-    });
-
+  });
 });
 
 // const getData= async()=>{
-  
 
-    
 //     await axios.get('https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=7204O8KH4D5547Q3JBB7&detail=Y&genre=로맨스&releaseDts=20220901&listCount=50')
 //     .then(function(response){
 //       data = response.data.Data[0].Result
@@ -240,7 +227,7 @@ app.get("/", (req, res)=>{
 //       const movieDataList = [];
 
 //       for(key in data){
-      
+
 //         let title = data[key].title;
 //         let repRlsDate = data[key].repRlsDate;
 //         let nation = data[key].nation;
@@ -282,12 +269,10 @@ app.get("/", (req, res)=>{
 //       //   releaseDts : "20220901",
 //       //   listCount : "50"
 //       // }
-    
-  
+
 // }
 
 // getData();
-
 
 // app.get('/', (req, res, next)=>{
 //   // const sql = `select * from movieapi`
@@ -300,8 +285,6 @@ app.get("/", (req, res)=>{
 //     method : 'GET',
 //     url : apiURL,
 //   }
-
-
 
 //   request (options, (err, res, body)=>{
 //     if(err){
@@ -347,13 +330,12 @@ app.get("/", (req, res)=>{
 //       console.log('출연배우: '  + data[key].actors.actor[0].actorNm, data[key].actors.actor[1].actorNm);
 //       console.log("")
 
-        
 //         // , data[key].actors.actor[1].actorNm, data[key].actors.actor[2].actorNm, data[key].actors.actor[3].actorNm, data[key].actors.actor[4].actorNm)
 
 //         movieDataList.push([title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors])
 //         // console.log(movieDataList);
 //     }
-      
+
 //       // const sql = 'insert into movieapi (title, repRlsDate, nation, rating, runtime, genre, directors, codes, plots, actors) values?';
 //       // const param = [movieDataList];
 
@@ -364,27 +346,11 @@ app.get("/", (req, res)=>{
 //       //     console.log(rows);
 //       //   }
 //       // });
-      
+
 //   })
-    
+
 // });
 
-  
-
-
-
-app.listen(port, ()=>{
-  console.log('3050 서버 start');
-})
-
-
-
-
-
-
-
-
-
-
-
-
+app.listen(port, () => {
+  console.log("3050 서버 start");
+});
