@@ -11,6 +11,7 @@
 // exports= tag;
 
 const app = document.getElementById("app");
+// console.dir(app)
 
 const drawer = app.children[0];
 const span = app.children[1];

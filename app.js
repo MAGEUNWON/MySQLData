@@ -3,7 +3,7 @@ const app = express();
 const dotenv = require("dotenv").config();
 const mysqlConObj = require("./config/mysql");
 const db = mysqlConObj.init();
-const port = 3050;
+const port = 3000;
 const request = require("request");
 const bodyParser = require("body-parser");
 const { urlencoded } = require("body-parser");
@@ -352,5 +352,5 @@ app.get("/", (req, res) => {
 // });
 
 app.listen(port, () => {
-  console.log("3050 서버 start");
+  console.log("3000 서버 start");
 });
