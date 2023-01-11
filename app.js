@@ -4,14 +4,8 @@ const dotenv = require("dotenv").config();
 const mysqlConObj = require("./config/mysql");
 const db = mysqlConObj.init();
 const port = 3000;
-const request = require("request");
 const bodyParser = require("body-parser");
-const { urlencoded } = require("body-parser");
-const mysqlConnection = require("./config/mysql");
-const axios = require("axios");
-const { response, text } = require("express");
 const fetch = require("node-fetch");
-const path = require("path");
 
 mysqlConObj.open(db);
 
